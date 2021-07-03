@@ -13,11 +13,15 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
+set(GOOGLE_TEST_DIR ${CMAKE_SOURCE_DIR}/submodules/googletest)
+add_subdirectory(${GOOGLE_TEST_DIR})
+
 add_executable(helloworld_cli main.cpp)
 add_library(helloworld lib.cpp)
 add_executable(test_version test_version.cpp)
+add_executable(test_google_version test_google_version.cpp)
 
-set_target_properties(helloworld_cli helloworld test_version PROPERTIES
+set_target_properties(helloworld_cli helloworld test_version test_google_version PROPERTIES
     CXX_STANDARD 14
     CXX_STANDARD_REQUIRED ON
 )
@@ -34,6 +38,10 @@ target_link_libraries(helloworld_cli PRIVATE
 )
 target_link_libraries(test_version
     ${Boost_LIBRARIES}
+    helloworld
+)
+target_link_libraries(test_google_version
+    gtest
     helloworld
 )
 
@@ -77,3 +85,4 @@ include(CPack)
 enable_testing()
 
 add_test(test_version ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_version)
+add_test(test_google_version ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_google_version)
