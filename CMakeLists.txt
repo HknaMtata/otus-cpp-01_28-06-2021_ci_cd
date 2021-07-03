@@ -9,6 +9,10 @@ find_package(Boost COMPONENTS unit_test_framework REQUIRED)
 
 configure_file(version.h.in version.h)
 
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
 add_executable(helloworld_cli main.cpp)
 add_library(helloworld lib.cpp)
 add_executable(test_version test_version.cpp)
@@ -55,7 +59,7 @@ else ()
     )
 endif()
 
-
+# Packaging
 
 install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
 
@@ -69,6 +73,7 @@ set(CPACK_PACKAGE_CONTACT example@example.com)
 
 include(CPack)
 
+# Testing
 enable_testing()
 
-add_test(test_version test_version)
+add_test(test_version ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_version)
