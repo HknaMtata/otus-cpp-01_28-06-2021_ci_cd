@@ -18,7 +18,7 @@ jobs:
       - name: GTest compile and install
         working-directory: ./googletest
         run: |
-          sudo cmake .
+          sudo cmake . -Dgtest_disable_pthreads=ON
           sudo cmake --build . --target install
       - name: Boost install
         run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
