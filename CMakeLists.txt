@@ -3,18 +3,18 @@ cmake_minimum_required(VERSION 3.2)
 set(PATCH_VERSION "1" CACHE INTERNAL "Patch version")
 set(PROJECT_VESRION 0.0.${PATCH_VERSION})
 
-project(helloworld VERSION ${PROJECT_VESRION})
+project(ip-filter VERSION ${PROJECT_VESRION})
 
 find_package(Boost COMPONENTS unit_test_framework REQUIRED)
-
-configure_file(version.h.in version.h)
+find_package(GTest COMPONENTS gtest REQUIRED)
 
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-set(GOOGLE_TEST_DIR ${CMAKE_SOURCE_DIR}/submodules/googletest)
-add_subdirectory(${GOOGLE_TEST_DIR})
+enable_testing()
+
+configure_file(version.h.in version.h)
 
 add_executable(helloworld_cli main.cpp)
 add_library(helloworld lib.cpp)
@@ -65,11 +65,18 @@ else ()
     target_compile_options(test_version PRIVATE
         -Wall -Wextra -pedantic -Werror
     )
+    target_compile_options(test_google_version PRIVATE
+        -Wall -Wextra -pedantic -Werror
+    )
 endif()
 
-# Packaging
+add_subdirectory(ip-filter)
 
-install(TARGETS helloworld_cli RUNTIME DESTINATION bin)
+add_test(NAME TestVersion COMMAND test_version)
+add_test(NAME TestGoogleVersion COMMAND test_google_version)
+
+# Packaging
+install(TARGETS ip-filter RUNTIME DESTINATION bin)
 
 set(CPACK_GENERATOR DEB)
 
@@ -80,9 +87,3 @@ set(CPACK_PACKAGE_VERSION_PATCH "${PROJECT_VERSION_PATCH}")
 set(CPACK_PACKAGE_CONTACT example@example.com)
 
 include(CPack)
-
-# Testing
-enable_testing()
-
-add_test(test_version ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_version)
-add_test(test_google_version ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/test_google_version)

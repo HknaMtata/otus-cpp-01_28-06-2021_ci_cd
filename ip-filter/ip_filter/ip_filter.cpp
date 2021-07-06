@@ -9,7 +9,9 @@
 #include <stdint.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
-#include "ipv4.h"
+#include <ipv4.h>
+
+using Ipv4Container = std::list<Ipv4>;
 
 template <typename T, typename Pred>
 auto filter(const T& container, Pred pred)
@@ -19,9 +21,10 @@ auto filter(const T& container, Pred pred)
     return out;
 }
 
-std::list<Ipv4> read_ips_list(std::istream& ss)
+template<typename T>
+T read_ips_list(std::istream& ss)
 {
-    std::list<Ipv4> ips;
+    T ips;
     for(std::string line; std::getline(std::cin, line);)
     {
         std::string ip;
@@ -36,7 +39,7 @@ int main(int argc, char const *argv[])
     try
     {
         // TODO: Here code stops when there is no data in stdin
-        std::list<Ipv4> ips = read_ips_list(std::cin);
+        Ipv4Container ips = read_ips_list<Ipv4Container>(std::cin);
 
         // Sort and print
         ips.sort(std::greater<Ipv4>());
