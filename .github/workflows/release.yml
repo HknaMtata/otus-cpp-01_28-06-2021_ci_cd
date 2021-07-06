@@ -17,13 +17,13 @@ jobs:
         run: git clone https://github.com/google/googletest.git googletest
       - name: GTest compile and install
         working-directory: ./googletest
-      - run: |
+        run: |
           sudo cmake .
           sudo cmake --build . --target install
       - name: Boost install
-      - run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
+        run: sudo apt-get update && sudo apt-get install libboost-test-dev -y
       - name: Project build
-      - run: |
+        run: |
           cmake . -DPATCH_VERSION=${{ github.run_number }}
           cmake --build .
           CTEST_OUTPUT_ON_FAILURE=1 cmake --build . --target test
