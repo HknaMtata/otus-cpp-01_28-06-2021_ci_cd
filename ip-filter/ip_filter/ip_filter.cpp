@@ -1,20 +1,14 @@
-#include <cassert>
-#include <cstdlib>
 #include <iostream>
 #include <string>
-#include <vector>
 #include <list>
 #include <algorithm>
 #include <sstream>
-#include <stdint.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
 #include <ipv4.h>
 
 using Ipv4Container = std::list<Ipv4>;
 
 template <typename T, typename Pred>
-auto filter(const T& container, Pred pred)
+T filter(const T& container, Pred pred)
 {
     T out;
     std::copy_if(cbegin(container), cend(container), std::back_inserter(out), pred);
@@ -38,7 +32,6 @@ int main(int argc, char const *argv[])
 {
     try
     {
-        // TODO: Here code stops when there is no data in stdin
         Ipv4Container ips = read_ips_list<Ipv4Container>(std::cin);
 
         // Sort and print
@@ -53,7 +46,7 @@ int main(int argc, char const *argv[])
             for(const auto& ip : filter(ips, predicate)) std::cout << ip << std::endl;
         }
 
-        // Filter by 2nd and 3rd bytes 
+        // Filter by 1st and 2nd bytes 
         {
             const Ipv4 mask("255.255.0.0");
             const Ipv4 val("46.70.0.0");

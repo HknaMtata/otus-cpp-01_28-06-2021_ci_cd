@@ -9,7 +9,8 @@ namespace
 uint32_t Ipv4FromString(const std::string& str)
 {
     struct in_addr addr;
-    inet_aton(str.c_str(), &addr);
+    if(inet_aton(str.c_str(), &addr) == 0)
+        throw std::runtime_error("failed to parse ip address " + str);
     return ntohl(addr.s_addr);
 }
 
@@ -53,6 +54,8 @@ bool Ipv4::operator>(const Ipv4& other) const
 
 bool Ipv4::operator<(const Ipv4& other) const
 {
+    if(other.ip == ip)
+        return false;
     return !((*this) > other);
 }
 
